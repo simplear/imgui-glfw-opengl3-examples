@@ -2,6 +2,11 @@
 
 - Templates that run with imgui/glfw/opengl3.
 
+## Confirmed Environment
+- Ubuntu 16.04
+- C++
+- gcc-version 5.4.0
+
 ## Dependency
 - Same as what "https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3" requires.
 
