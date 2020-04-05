@@ -1,0 +1,6 @@
+3rdparty/imgui
+
+src*/imgui.ini
+src*/*.o
+src*/glfw_opengl3_template
+
