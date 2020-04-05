@@ -19,7 +19,7 @@
 
 ## Examples
 - Each template-source-code is put under src* directory 
-- List of templates
+- List
     - src0 : the same function as https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3".
     - src1 : show only the main and sub(optional) window.
     - src2 : load and show an image using "stb" library.
