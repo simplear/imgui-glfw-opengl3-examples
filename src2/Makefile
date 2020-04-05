@@ -26,7 +26,7 @@ SOURCES += ../3rdparty/imgui/examples/libs/gl3w/GL/gl3w.c ## OPENGL LOADER
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 
-CXXFLAGS = -I../3rdparty/imgui/examples -I../3rdparty/imgui
+CXXFLAGS = -I../3rdparty/imgui/examples -I../3rdparty/imgui -I../3rdparty/stb
 CXXFLAGS += -g -Wall -Wformat
 CXXFLAGS += -I../3rdparty/imgui/examples/libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W ## OPENGL LOADER
 CXXFLAGS += `pkg-config --cflags glfw3` ## BUILD FLAGS PER PLATFORM (Linux)

@@ -53,15 +53,3 @@ $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 clean:
 	rm -f $(EXE) $(OBJS)
-
-#### Make Ran Example
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o main.o main.cpp
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o imgui_impl_glfw.o ../imgui_impl_glfw.cpp
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o imgui_impl_opengl3.o ../imgui_impl_opengl3.cpp
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o imgui.o ../../imgui.cpp
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o imgui_demo.o ../../imgui_demo.cpp
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o imgui_draw.o ../../imgui_draw.cpp
-# g++ -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o imgui_widgets.o ../../imgui_widgets.cpp
-# cc -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3` -c -o gl3w.o ../libs/gl3w/GL/gl3w.c
-# g++ -o example_glfw_opengl3 main.o imgui_impl_glfw.o imgui_impl_opengl3.o imgui.o imgui_demo.o imgui_draw.o imgui_widgets.o gl3w.o -I../ -I../../ -g -Wall -Wformat -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W `pkg-config --cflags glfw3`  -lGL `pkg-config --static --libs glfw3`
-# Build complete for Linux

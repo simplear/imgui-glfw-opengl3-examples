@@ -1,4 +1,4 @@
-3rdparty/imgui
+3rdparty/*
 
 src*/imgui.ini
 src*/*.o
