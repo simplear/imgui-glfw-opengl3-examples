@@ -1,6 +1,6 @@
-# imgui glfw opengl3 Template
+# Example codes that use imgui/glfw/opengl3
 
-- Templates that run with imgui/glfw/opengl3.
+- Examples(templates) that run with imgui/glfw/opengl3.
 
 ## Confirmed Environment
 - Ubuntu 16.04
@@ -17,7 +17,7 @@
 - [gl3w](https://www.glfw.org)
 - Refer what "https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3" requires.
 
-## Templates
+## Examples
 - Each template-source-code is put under src* directory 
 - List of templates
     - src0 : the same function as https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3".
