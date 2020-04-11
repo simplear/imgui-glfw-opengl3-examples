@@ -1,8 +1,6 @@
 # Example codes that use imgui/glfw/opengl3
 
-- Examples(templates) that run with imgui/glfw/opengl3.
-- Additionally for src2 : "stb"
-- Additionally for src3 : "opencv4.1.0"
+Examples(templates) that run with imgui/glfw/opengl3.
 
 ## Confirmed Environment
 - Ubuntu 16.04
@@ -15,9 +13,10 @@
 - http://siguma-sig.hatenablog.com/entry/2017/04/23/004545
 
 ## Dependency
-- [dear imgui](https://github.com/ocornut/imgui)
-- [stb](https://github.com/nothings/stb)
-- [gl3w](https://www.glfw.org)
+- [dear imgui](https://github.com/ocornut/imgui) : for all examples
+- [gl3w](https://www.glfw.org) : for all examples
+- [stb](https://github.com/nothings/stb) : for src2
+- OpenCV 4.1.0 : for src3
 - Refer what "https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3" requires.
 
 ## Examples
@@ -44,7 +43,7 @@ cd ..
 
 ```
 cd src0
-make
+make -j`nproc`
 ```
 
 ## Run
