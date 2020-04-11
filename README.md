@@ -27,7 +27,7 @@ Examples(templates) that run with imgui/glfw/opengl3.
     - src2 : load and show an image using "stb" library.
     - src3 : load and show an image using OpenCV 4.1.0
 
-## Build
+## Build and Run
 - common 
 
 ```
@@ -44,10 +44,6 @@ cd ..
 ```
 cd src0
 make -j`nproc`
-```
-
-## Run
-
-```
 ./glfw_opengl3_template
 ```
+
