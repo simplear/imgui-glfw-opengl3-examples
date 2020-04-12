@@ -12,7 +12,7 @@
 #CXX = g++
 #CXX = clang++
 
-EXE = glfw_opengl3_template
+EXE = glfw_opengl3_example
 
 SOURCES =     main.cpp
 SOURCES += ../3rdparty/imgui/examples/imgui_impl_glfw.cpp
