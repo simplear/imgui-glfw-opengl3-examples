@@ -1,6 +1,6 @@
 # Example codes that use imgui/glfw/opengl3
 
-Examples(templates) that run with imgui/glfw/opengl3.
+Examples that run with imgui/glfw/opengl3.
 
 ## Confirmed Environment
 - Ubuntu 16.04
@@ -21,19 +21,19 @@ Examples(templates) that run with imgui/glfw/opengl3.
 
 ## Examples
 - Each template-source-code is put under src* directory 
-- List
+- Source Code List
     - src0 : the same function as https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3".
     - src1 : show only the main and sub(optional) window.
     - src2 : load and show an image using "stb" library.
     - src3 : load and show an image using OpenCV 4.1.0
 
 ## Build and Run
-- common 
+- common
 
 ```
-git clone git@github.com:simplear/imgui-glfw-opengl3-template
+git clone git@github.com:simplear/imgui-glfw-opengl3-examples
 mkdir 3rdparty
-cd imgui-glfw-opengl3-template/3rdparty
+cd 3rdparty
 git clone https://github.com/ocornut/imgui.git
 git clone git@github.com:nothings/stb.git
 cd ..
@@ -44,6 +44,6 @@ cd ..
 ```
 cd src0
 make -j`nproc`
-./glfw_opengl3_template
+./glfw_opengl3_example
 ```
 
