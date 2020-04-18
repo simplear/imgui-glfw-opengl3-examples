@@ -27,7 +27,8 @@ Examples that run with imgui/glfw/opengl3.
     - src1 : show only the main and sub(optional) window.
     - src2 : load and show an image using "stb" library.
     - src3 : load and show an image using "OpenCV 4.1.0".
-    - src4 : base on src3, add live video streaming using "OpenCV 4.1.0".
+    - src4 : base on src3, added live video streaming.
+    - src5 : base on src4, added average-multi-frame function
 
 ## Build and Run
 - common
