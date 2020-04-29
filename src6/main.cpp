@@ -6,10 +6,15 @@
 #include <iostream>
 #include <fstream>
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
 
-#include <opencv2/core.hpp>
-#include <opencv2/videoio.hpp>
-#include <opencv2/highgui.hpp>
+// Reference
+/*
+https://github.com/ocornut/imgui
+https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+http://siguma-sig.hatenablog.com/entry/2017/04/23/004545
+https://docs.opencv.org/4.1.1/df/d5e/samples_2cpp_2tutorial_code_2ImgProc_2Morphology_1_8cpp-example.html#a14
+*/
 
 // Desktop OpenGL function loaders
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -23,8 +28,8 @@
 #include <glbinding/glbinding.h>  // Initialize with glbinding::initialize()
 #include <glbinding/gl/gl.h>
 
+//using namespace std;
 //using namespace gl;
-using namespace std;
 //using namespace cv;
 
 #else
@@ -74,9 +79,11 @@ bool LoadTextureFromFileCV(const char* filename, GLuint* out_texture, int* out_w
     return true;
 }
 
-// Load an image into a OpenGL texture with common settings
 bool LoadTextureFromMat(cv::Mat image_cv, GLuint* out_texture, int* out_width, int* out_height)
 {
+    // expect 3ch Mat
+    // Load from Mat
+    //cv::Mat image_cv = cv::imread(filename,3);          // read color image
     int image_width =  image_cv.size[1];                  // get image width
     int image_height = image_cv.size[0];                  // get image height
     cv::cvtColor(image_cv, image_cv, cv::COLOR_BGR2RGBA); // convert BGR -> RGBA
@@ -165,41 +172,54 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Variables
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Added to show image ///////////////////////////////////////////////
     int my_image_width = 0;
     int my_image_height = 0;
-    GLuint my_image_texture = 0;
-    bool ret = LoadTextureFromFileCV("../image/notepen3.jpg", &my_image_texture, &my_image_width, &my_image_height);
-    IM_ASSERT(ret);
+    GLuint my_image_texture = 0;   // Original
+    GLuint my_image_texture_d = 0; // Dilated / Drawn Contours
+    GLuint my_image_texture_f = 0; // Filled
+    cv::Mat image_cv = cv::imread("../image/contours.png",3);    // read png and texture
     //////////////////////////////////////////////////////////////////////
 
-    // OpenCV Viedeo Capture /////////////////////////////////////////////
-    cv::Mat frame;              //--- INITIALIZE VIDEOCAPTURE
-    cv::VideoCapture cap;
-    int deviceID = 0;           // 0 = open default camera
-    int apiID = cv::CAP_ANY;    // 0 = autodetect default API
-    cap.open(deviceID + apiID); // Open Device
+    cv::Mat image_cv_1ch;
+    cv::Mat image_cv_1ch_dilated;
+    cv::Mat image_cv_cont;
+    cv::Mat image_cv_cont_filled;
 
-    if (!cap.isOpened()) {
-        std::cout << "ERROR! Unable to open camera\n"; // check if opened correctly
-        return -1;
-    }
+    cv::Scalar color( 255, 0, 255 );
+    cv::Scalar colorToFill( 255, 0, 0 );
 
-    GLuint video_image_texture = 0; // initialize image texture
-    int video_image_height = 0;     // get image height
-    int video_image_width =  0;     // get image width
+    // contours / hierarchy
+    std::vector<std::vector<cv::Point> > contours;
+    std::vector<cv::Vec4i> hierarchy;
 
-    //////////////////////////////////////////////////////////////////////
+    //uint idx = 0;
+    int dilation_size=0;  // how much pixel to dilate
+    int RetrievalModes=0; // contour retrieval mode
+    int ContourApproximationModes=1;
+    std::string RetrievalModes_text;             // for Display
+    std::string ContourApproximationModes_text;  // for Display
+
+    /*
+    ----- Contour 検出モード
+    RETR_EXTERNAL =0 (親子なし。最外側の輪郭のみ。)
+    RETR_LIST     =1 (親子なし) 
+    RETR_CCOMP    =2 (全輪郭を検出し，2レベルの階層に分類)
+    RETR_TREE     =3 (全輪郭を検出し，全階層情報)
+    ----- Contour 近似方法
+    CHAIN_APPROX_NONE      =0
+    CHAIN_APPROX_SIMPLE    =1 -- デフォルト
+    CHAIN_APPROX_TC89_L1   =2
+    CHAIN_APPROX_TC89_KCOS =3
+    */
+
+    //    LoadTextureFromMat(image_cv, &my_image_texture, &my_image_width, &my_image_height);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
-        // capture a frame
-        cap.read(frame);
-        LoadTextureFromMat(frame, &video_image_texture, &video_image_width, &video_image_height);
 
         glfwPollEvents();
 
@@ -210,50 +230,104 @@ int main(int, char**)
 
         // main window
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
+            ImGui::Begin("Configuration");
+            ImGui::SliderInt("dilation_size", &dilation_size, 0, 5);
+            ImGui::SliderInt("RetrievalModes", &RetrievalModes, 0, 3);
+            ImGui::SliderInt("ContourApproximationModes", &ContourApproximationModes, 0, 3);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
 
-        // Show another simple window.
-        if (show_another_window)
+        // process image /////////////////////////////////////////////////////
+        cv::cvtColor(image_cv,image_cv_1ch, cv::COLOR_BGR2GRAY); // 3ch -> 1ch
+        image_cv_cont=image_cv.clone();
+
+        // Dilate (膨張)
+        // define kernel
+        cv::Mat element = getStructuringElement( cv::MORPH_RECT,
+                       cv::Size( 2*dilation_size + 1, 2*dilation_size+1 ),
+                       cv::Point( dilation_size, dilation_size ) );
+        cv::dilate(image_cv_1ch,image_cv_1ch_dilated, element);
+
+        image_cv_cont_filled=image_cv_cont.clone();
+
+        // 輪郭抽出
+        cv::findContours( image_cv_1ch_dilated, contours, hierarchy, RetrievalModes, ContourApproximationModes, cv::Point(0, 0) );
+
+        for( uint idx =0; idx<hierarchy.size(); idx++ )
         {
-            ImGui::Begin("Another Window", &show_another_window);
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
+            cv::drawContours( image_cv_cont,        contours, idx, color, cv::LINE_4, 8, hierarchy );
+            cv::drawContours( image_cv_cont_filled, contours, idx, color, cv::LINE_4, 8, hierarchy );
+            /*
+            // when　you want to fill only children
+            if(hierarchy[idx][2]!=-1){
+                cv::fillConvexPoly( image_cv_cont_filled, contours[hierarchy[idx][2]], colorToFill);
+            }
+            */
+            cv::fillConvexPoly( image_cv_cont_filled, contours[idx], colorToFill);
         }
 
-        // Added to show image ///////////////////////////////////////////////
-        // Image Window
-        ImGui::Begin("Load and Show an Image");
+        // Render and Show image
+
+        // Original
+        LoadTextureFromMat(image_cv, &my_image_texture, &my_image_width, &my_image_height);
+        ImGui::Begin("Original");
         ImGui::Text("size = %d x %d", my_image_width, my_image_height);
         ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(my_image_width, my_image_height));
         ImGui::End();
-        //////////////////////////////////////////////////////////////////////
 
-        // Added to show live video //////////////////////////////////////////
-        // Live Video Window
-        ImGui::Begin("Live Streaming");
-        ImGui::Text("size = %d x %d", video_image_width, video_image_height);
-        ImGui::Image((void*)(intptr_t)video_image_texture, ImVec2(video_image_width, video_image_height));
+        // Dilated / Drawn Contours
+        LoadTextureFromMat(image_cv_cont, &my_image_texture_d, &my_image_width, &my_image_height);
+        ImGui::Begin("Dilated / Drawn Contours");
+        ImGui::Text("size = %d x %d", my_image_width, my_image_height);
+        ImGui::Image((void*)(intptr_t)my_image_texture_d, ImVec2(my_image_width, my_image_height));
+
+        switch(RetrievalModes){
+            case 0:
+                RetrievalModes_text = "RETR_EXTERNAL";
+                break;
+            case 1:
+                RetrievalModes_text = "RETR_LIST";
+                break;
+            case 2:
+                RetrievalModes_text = "RETR_CCOMP";
+                break;
+            case 3:
+                RetrievalModes_text = "RETR_TREE";
+                break;
+        }
+
+        switch(ContourApproximationModes){
+            case 0:
+                ContourApproximationModes_text = "CHAIN_APPROX_NONE";
+                break;
+            case 1:
+                ContourApproximationModes_text = "CHAIN_APPROX_SIMPLE";
+                break;
+            case 2:
+                ContourApproximationModes_text = "CHAIN_APPROX_TC89_L1";
+                break;
+            case 3:
+                ContourApproximationModes_text = "CHAIN_APPROX_TC89_KCOS";
+                break;
+        }
+
+        ImGui::Text("RetrievalModes : %s", RetrievalModes_text.c_str());
+        ImGui::Text("ContourApproximationModes : %s", ContourApproximationModes_text.c_str());
+        ImGui::Text("Hierarchy");
+        for (uint j=0;j<hierarchy.size();j++){
+                ImGui::Text("%4d %4d %4d %4d", hierarchy[j][0],hierarchy[j][1],hierarchy[j][2],hierarchy[j][3]);
+        }
+
         ImGui::End();
+
+        // Filled
+        LoadTextureFromMat(image_cv_cont_filled, &my_image_texture_f, &my_image_width, &my_image_height);
+        ImGui::Begin("Filled");
+        ImGui::Text("size = %d x %d", my_image_width, my_image_height);
+        ImGui::Image((void*)(intptr_t)my_image_texture_f, ImVec2(my_image_width, my_image_height));
+        ImGui::End();
+
         //////////////////////////////////////////////////////////////////////
 
         // Rendering
@@ -267,8 +341,12 @@ int main(int, char**)
 
         glfwSwapBuffers(window);
 
-        // Memory Release
-    	glDeleteTextures(1 , &video_image_texture);
+        // Release Memory
+        glDeleteTextures(1 , &my_image_texture);
+        glDeleteTextures(1 , &my_image_texture_d);
+        glDeleteTextures(1 , &my_image_texture_f);
+        contours.clear();
+
     }
 
     // Cleanup
@@ -278,8 +356,6 @@ int main(int, char**)
 
     glfwDestroyWindow(window);
     glfwTerminate();
-
-    glDeleteTextures(1 , &my_image_texture);
 
     return 0;
 }

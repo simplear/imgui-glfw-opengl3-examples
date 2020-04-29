@@ -29,6 +29,7 @@ Examples that run with imgui/glfw/opengl3.
     - src3 : load and show an image using "OpenCV 4.1.0".
     - src4 : base on src3, added live video streaming.
     - src5 : base on src4, added average-multi-frame function
+    - src6 : base on src3, added image processing using contours
 
 ## Build and Run
 - common

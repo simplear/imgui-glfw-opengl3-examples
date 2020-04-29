@@ -311,6 +311,11 @@ int main(int, char**)
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
+
+        // Memory Release
+    	glDeleteTextures(1 , &video_image_texture);
+    	glDeleteTextures(1 , &video_image_texture_ave);
+
     }
 
     // Cleanup
@@ -320,6 +325,9 @@ int main(int, char**)
 
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    // Memory Release
+    glDeleteTextures(1 , &my_image_texture);
 
     return 0;
 }
