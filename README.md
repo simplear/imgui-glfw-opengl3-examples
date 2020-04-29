@@ -14,11 +14,11 @@ Examples that run with imgui/glfw/opengl3.
 - https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
 
 ## Dependency
+- Refer what "https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3" requires.
 - [dear imgui](https://github.com/ocornut/imgui) : for all examples
 - [gl3w](https://www.glfw.org) : for all examples
 - [stb](https://github.com/nothings/stb) : for src2
-- OpenCV 4.1.0 : for src3, src4
-- Refer what "https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3" requires.
+- OpenCV 4.1.0 : for src3-src6
 
 ## Examples
 - Each template-source-code is put under src* directory 
@@ -47,6 +47,14 @@ cd ..
 
 ```
 cd src0
+make -j`nproc`
+./glfw_opengl3_example
+```
+
+- for "srcN" (N is a number)
+
+```
+cd srcN
 make -j`nproc`
 ./glfw_opengl3_example
 ```
