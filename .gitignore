@@ -1,4 +1,5 @@
 3rdparty/*
+underStudy/*
 
 src*/imgui.ini
 src*/*.o

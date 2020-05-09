@@ -1,3 +1,0 @@
-make clear
-make -j`nproc`
-./glfw_opengl3_example
