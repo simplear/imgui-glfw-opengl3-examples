@@ -1,4 +1,4 @@
-# Examples that run with imgui/glfw/opengl3
+# Examples that run with Dear-ImGui/GLFW/OpenGL3
 
 ## Confirmed Environment
 - Ubuntu 16.04
@@ -16,12 +16,12 @@
 - [dear imgui](https://github.com/ocornut/imgui) : for all examples
 - [gl3w](https://www.glfw.org) : for all examples
 - [stb](https://github.com/nothings/stb) : for src02
-- [implot](https://github.com/epezent/implot) : for src07-9
+- [implot](https://github.com/epezent/implot) : for src07-09
 - OpenCV 4.1.0 : for src03-src07
 
 ## Examples
 - Each template-source-code is put under src* directory 
-- Source Code List
+- Source Codes
     - src00 : the same function as https://github.com/ocornut/imgui/tree/master/examples/example_glfw_opengl3".
     - src01 : show only the main and sub(optional) window.
     - src02 : load and show an image using "stb" library.
@@ -30,8 +30,8 @@
     - src05 : base on src04, added average-multi-frame function
     - src06 : base on src03, added image processing using contours
     - src07 : base on src06, added plotter function by implot
-    - src08 : run implot minimal-demo for this environment
-    - src09 : run implot demo for this environment
+    - src08 : implot (plot graph and so on) minimal-demo for this environment
+    - src09 : implot (plot graph and so on) rich-demo for this environment
 
 ## Build and Run
 - common
