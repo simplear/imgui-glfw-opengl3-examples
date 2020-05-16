@@ -29,9 +29,10 @@
     - src04 : base on src03, added live video streaming.
     - src05 : base on src04, added average-multi-frame function
     - src06 : base on src03, added image processing using contours
-    - src07 : base on src06, added plotter function by implot
+    - src07 : base on src06, added plotter function by implot (only for test)
     - src08 : implot (plot graph and so on) minimal-demo for this environment
     - src09 : implot (plot graph and so on) rich-demo for this environment
+    - src10 : base on src04, added chess board recognition by OpenCV
 
 ## Build and Run
 - common
